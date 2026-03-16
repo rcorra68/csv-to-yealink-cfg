@@ -11,7 +11,7 @@ public class YealinkConfigGenerator
     public void Generate(string outputPath, IEnumerable<Terminal> terminals)
     {
         // TODO [#2]: Fallback to default path if OutputPath is null or empty
-        using (StreamWriter writer = new StreamWriter("expansion_module.cfg"))
+        using (StreamWriter writer = new StreamWriter(outputPath))
         {
             writer.WriteLine("# Yealink Directory Configuration");
             writer.WriteLine("#");
