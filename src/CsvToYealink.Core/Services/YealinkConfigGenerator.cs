@@ -21,8 +21,7 @@ public class YealinkConfigGenerator
 
                 writer.WriteLine($"# --- expansion_module.{moduleId}.key.{terminal.Key} ---");
                 writer.WriteLine($"expansion_module.{moduleId}.key.{terminal.Key}.label = {terminal.Label}");
-                // FIXME [#1]: TODO: Display the numeric value of the enum instead of its name
-                writer.WriteLine($"expansion_module.{moduleId}.key.{terminal.Key}.type = {terminal.ExtensionType}");
+                writer.WriteLine($"expansion_module.{moduleId}.key.{terminal.Key}.type = {(int)terminal.ExtensionType}");
 
                 switch (terminal.ExtensionType)
                 {
