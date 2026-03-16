@@ -8,9 +8,9 @@ using CsvHelper;
 using CsvToYealink.Core.Entities;
 using CsvToYealink.Core.Services.Interfaces;
 
-public class CsvParser : ICsvParser
+public class CsvService : ICsvService
 {
-    public IEnumerable<Terminal> Parse(string filePath)
+    public IEnumerable<T> ReadRecords<T>(string filePath) where T : class
     {
         var terminals = new List<Terminal>();
 
@@ -21,7 +21,7 @@ public class CsvParser : ICsvParser
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 csv.Context.RegisterClassMap<TerminalMap>();
-                terminals = csv.GetRecords<Terminal>().ToList();
+                return csv.GetRecords<T>().ToList();
             }
         }
         catch (FileNotFoundException)
@@ -37,7 +37,5 @@ public class CsvParser : ICsvParser
             }
             throw new Exception($"Error parsing CSV: {ex.Message}");
         }
-
-        return terminals;
     }
 }

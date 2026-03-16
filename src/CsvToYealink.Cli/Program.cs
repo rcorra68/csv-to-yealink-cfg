@@ -24,7 +24,7 @@ public class Program
     {
         try
         {
-            var parser = new CsvParser();
+            var parser = new CsvService();
             var generator = new YealinkConfigGenerator();
 
             // 1. Read

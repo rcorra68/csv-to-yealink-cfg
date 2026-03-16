@@ -1,42 +1,40 @@
-using FluentAssertions;
+namespace CsvToYealink.Tests.Unit;
 
-namespace CsvToYealink.Tests.Unit
+using CsvToYealink.Core.Entities;
+using CsvToYealink.Core.Services;
+
+using Xunit;
+
+public class CsvServiceTests
 {
-    [TestFixture]
-    public class CsvParserTests
+    [Fact]
+    public void ReadRecords_ShouldReturnValidData_WhenFileExists()
     {
-        private ICsvParser _parser;
+        // Arrange
+        var service = new CsvService(); // Constructor without logger for now
+        var filePath = "test_data.csv";
+        var csvContent = "key,label,line,type,value\r\n1,Segreteria,1,16,402\r\n2,SOUP Postazione 1,,2,0012035488";
 
-        [SetUp]
-        public void Setup()
+        File.WriteAllText(filePath, csvContent);
+
+        try
         {
-            // Initialize the service before each test
-            _parser = new CsvParser();
-        }
-
-        [Test]
-        [Category("Unit")]
-        public void ParseLine_WithValidCsv_ShouldReturnCorrectContact()
-        {
-            // Arrange
-            string csvLine = "John,Doe,123456";
-
             // Act
-            var result = _parser.ParseLine(csvLine);
+            var results = service.ReadRecords<Terminal>(filePath).ToList();
 
             // Assert
-            result.Should().NotBeNull();
-            result.FirstName.Should().Be("John");
-            result.LastName.Should().Be("Doe");
-            result.PhoneNumber.Should().Be("123456");
+            Assert.NotNull(results);
+            Assert.Equal(2, results.Count);
+            Assert.Equal("Segreteria", results[0].Label);
+            Assert.Equal(2, results[1].Key);
         }
-
-        [TestCase("", Description = "Empty string")]
-        [TestCase("InvalidData", Description = "Malformed CSV")]
-        public void ParseLine_WithInvalidData_ShouldThrowArgumentException(string invalidInput)
+        finally
         {
-            // Act & Assert
-            Assert.Throws<ArgumentException>(() => _parser.ParseLine(invalidInput));
+            // Clean up: delete the file after the test
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
         }
     }
 }
