@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37012.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		samples\estensioni_yealink.csv = samples\estensioni_yealink.csv
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvToYealink.Tests.Unit", "..\tests\CsvToYealink.Tests.Unit\CsvToYealink.Tests.Unit.csproj", "{23B55280-C17D-4861-AF13-DD02C258B4CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvToYealink.Cli", "CsvToYealink.Cli\CsvToYealink.Cli.csproj", "{764442C4-AA42-3C9E-108E-D91C20101B5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvToYealink.Core", "CsvToYealink.Core\CsvToYealink.Core.csproj", "{20886E4A-0A11-4B97-A05D-3D5BA3852988}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23B55280-C17D-4861-AF13-DD02C258B4CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23B55280-C17D-4861-AF13-DD02C258B4CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23B55280-C17D-4861-AF13-DD02C258B4CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23B55280-C17D-4861-AF13-DD02C258B4CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{764442C4-AA42-3C9E-108E-D91C20101B5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{764442C4-AA42-3C9E-108E-D91C20101B5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{764442C4-AA42-3C9E-108E-D91C20101B5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{764442C4-AA42-3C9E-108E-D91C20101B5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20886E4A-0A11-4B97-A05D-3D5BA3852988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20886E4A-0A11-4B97-A05D-3D5BA3852988}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20886E4A-0A11-4B97-A05D-3D5BA3852988}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20886E4A-0A11-4B97-A05D-3D5BA3852988}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{764442C4-AA42-3C9E-108E-D91C20101B5B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CCEFF90F-75B0-415A-80E8-F4EFA976E3D0}
+	EndGlobalSection
+EndGlobal

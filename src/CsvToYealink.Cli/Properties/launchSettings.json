@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "csv-to-yealink-cfg": {
+      "commandName": "Project",
+      "commandLineArgs": "-s d:\\Sviluppo\\VVF\\csv-to-yealink-cfg\\docs\\estensioni_yealink.csv"
+    }
+  }
+}
