@@ -31,8 +31,11 @@ public class CsvParser : ICsvParser
         }
         catch (CsvHelperException ex)
         {
-            // TODO (#4): Log specific row error details
-            throw new Exception($"Error parsing CSV at row {ex.Context.Parser.Row}: {ex.Message}");
+            if (ex.Context?.Parser != null)
+            {
+                throw new Exception($"Error parsing CSV at row {ex.Context.Parser.Row}: {ex.Message}");
+            }
+            throw new Exception($"Error parsing CSV: {ex.Message}");
         }
 
         return terminals;
