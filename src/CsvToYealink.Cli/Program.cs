@@ -2,6 +2,7 @@
 
 using CommandLine;
 
+using CsvToYealink.Core.Entities;
 using CsvToYealink.Core.Services;
 
 public class Program
@@ -28,7 +29,7 @@ public class Program
             var generator = new YealinkConfigGenerator();
 
             // 1. Read
-            var terminals = parser.Parse(opts.SourcePath);
+            var terminals = parser.ReadRecords<Terminal>(opts.SourcePath);
 
             // 2. Generate
             generator.Generate(opts.OutputPath, terminals);

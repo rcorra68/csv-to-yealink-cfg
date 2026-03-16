@@ -8,8 +8,6 @@ using CsvHelper;
 using CsvToYealink.Core.Entities;
 using CsvToYealink.Core.Services.Interfaces;
 
-// Technical Note: This service uses CsvHelper for high-performance parsing.
-// Ensure the CSV headers match the destination class properties.
 public class CsvService : ICsvService
 {
     public IEnumerable<T> ReadRecords<T>(string filePath) where T : class
