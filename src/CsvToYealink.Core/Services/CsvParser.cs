@@ -14,11 +14,25 @@ public class CsvParser : ICsvParser
     {
         var terminals = new List<Terminal>();
 
-        using (var reader = new StreamReader(filePath))
-        using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+        try
         {
-            csv.Context.RegisterClassMap<TerminalMap>();
-            terminals = csv.GetRecords<Terminal>().ToList();
+
+            using (var reader = new StreamReader(filePath))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                csv.Context.RegisterClassMap<TerminalMap>();
+                terminals = csv.GetRecords<Terminal>().ToList();
+            }
+        }
+        catch (FileNotFoundException)
+        {
+            // Re-throw with more context if needed, or let it bubble up
+            throw;
+        }
+        catch (CsvHelperException ex)
+        {
+            // TODO (#4): Log specific row error details
+            throw new Exception($"Error parsing CSV at row {ex.Context.Parser.Row}: {ex.Message}");
         }
 
         return terminals;

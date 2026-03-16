@@ -33,10 +33,17 @@ public class Program
             // 2. Generate
             generator.Generate(opts.OutputPath, terminals);
         }
+        catch (FileNotFoundException)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Error: The file '{opts.SourcePath}' was not found.");
+            Console.ResetColor();
+        }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
-            Environment.Exit(1);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            Console.ResetColor();
         }
     }
     private static void HandleParseError(IEnumerable<Error> errs)
