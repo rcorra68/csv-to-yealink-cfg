@@ -8,11 +8,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{02EA
 		samples\estensioni_yealink.csv = samples\estensioni_yealink.csv
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvToYealink.Tests.Unit", "..\tests\CsvToYealink.Tests.Unit\CsvToYealink.Tests.Unit.csproj", "{23B55280-C17D-4861-AF13-DD02C258B4CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvToYealink.Tests.Unit", "tests\CsvToYealink.Tests.Unit\CsvToYealink.Tests.Unit.csproj", "{23B55280-C17D-4861-AF13-DD02C258B4CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvToYealink.Cli", "CsvToYealink.Cli\CsvToYealink.Cli.csproj", "{764442C4-AA42-3C9E-108E-D91C20101B5B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvToYealink.Cli", "src\CsvToYealink.Cli\CsvToYealink.Cli.csproj", "{764442C4-AA42-3C9E-108E-D91C20101B5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvToYealink.Core", "CsvToYealink.Core\CsvToYealink.Core.csproj", "{20886E4A-0A11-4B97-A05D-3D5BA3852988}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvToYealink.Core", "src\CsvToYealink.Core\CsvToYealink.Core.csproj", "{20886E4A-0A11-4B97-A05D-3D5BA3852988}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{563557AB-4354-4569-9C48-74502F424109}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0D4AE9B2-A7E7-4898-9121-3166FE7F4FF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +39,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{23B55280-C17D-4861-AF13-DD02C258B4CB} = {0D4AE9B2-A7E7-4898-9121-3166FE7F4FF3}
+		{764442C4-AA42-3C9E-108E-D91C20101B5B} = {563557AB-4354-4569-9C48-74502F424109}
+		{20886E4A-0A11-4B97-A05D-3D5BA3852988} = {563557AB-4354-4569-9C48-74502F424109}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CCEFF90F-75B0-415A-80E8-F4EFA976E3D0}

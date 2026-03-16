@@ -3,9 +3,9 @@ name: .NET Core CI
 # Trigger: runs on every push and pull request to the main branch
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
   build-and-test:
