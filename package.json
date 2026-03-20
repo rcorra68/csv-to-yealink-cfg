@@ -1,6 +1,6 @@
 {
   "name": "csv-to-yeealing-cfg",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Project with automated semver and changelog",
   "devDependencies": {
     "standard-version": "^9.5.0"
