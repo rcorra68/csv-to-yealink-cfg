@@ -35,7 +35,7 @@ public class YealinkConfigGenerator
                 }
             }
 
-            Console.WriteLine($"Successfully generated {terminals.Count()} contacts in: {outputPath}");
+            Console.WriteLine($"Successfully generated {terminals.Count()} key in: {outputPath}");
         }
     }
 }

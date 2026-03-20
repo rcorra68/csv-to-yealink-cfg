@@ -6,7 +6,7 @@ using CsvHelper.TypeConversion;
 
 public class SafeIntConverter : DefaultTypeConverter
 {
-    public override object ConvertFromString(string text, IReaderRow row, MemberMapData memberMapData)
+    public override object ConvertFromString(string? text, IReaderRow row, MemberMapData memberMapData)
     {
         if (string.IsNullOrWhiteSpace(text))
         {
