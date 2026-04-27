@@ -1,10 +1,16 @@
 ## [unreleased]
 
+### 📚 Documentation
+
+- Update CHANGELOG
+- Modified CHANGELOG.md
+
 ### ⚙️ Miscellaneous Tasks
 
 - Align development environment
 - Sync package-lock.json after dependency update
 - Removing package-lock.json file after removing npm dependencies
+- Changed the project name from Tests.Unit to Tests for development consistency
 ## [1.1.0] - 2026-03-20
 
 ### 🚀 Features
