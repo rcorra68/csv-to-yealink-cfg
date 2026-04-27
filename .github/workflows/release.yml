@@ -4,64 +4,62 @@ on:
   push:
     branches: [ main ]
 
+concurrency:
+  group: release
+  cancel-in-progress: true
+
 jobs:
   release:
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
 
     steps:
-    # 1. Checkout completo (fondamentale per git-cliff)
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    # 2. Install git-cliff (cross-platform via cargo)
-    - name: Install git-cliff
-      run: cargo install git-cliff
+      # Utilizzo la Action per evitare i 3-5 minuti di compilazione di Cargo
+      - name: Install git-cliff
+        uses: kenji-miyake/setup-git-cliff@v2
 
-    # 3. Calcola versione semver basata sui commit
-    - name: Compute next version
-      id: version
-      run: |
-        NEXT_VERSION=$(git cliff --bumped-version)
-        echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
-        echo "Next version: $NEXT_VERSION"
+      - name: Compute next version
+        id: version
+        run: |
+          NEXT_VERSION=$(git cliff --bumped-version)
+          if [ -z "$NEXT_VERSION" ]; then
+            echo "No version detected, skipping."
+            exit 0
+          fi
+          # Usiamo GITHUB_OUTPUT invece di GITHUB_ENV per best practice tra step
+          echo "next_version=$NEXT_VERSION" >> $GITHUB_OUTPUT
 
-    # 4. Genera changelog
-    - name: Generate changelog
-      run: git-cliff -o CHANGELOG.md
+      - name: Generate Release Body
+        if: steps.version.outputs.next_version != ''
+        run: |
+          # Genera solo il log dell'ultima versione in un file temporaneo
+          git-cliff --latest --strip header > RELEASE_NOTES.md
 
-    # 5. Commit changelog aggiornato
-    - name: Commit changelog
-      run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Push tag
+        if: steps.version.outputs.next_version != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          if git rev-parse "${{ steps.version.outputs.next_version }}" >/dev/null 2>&1; then
+            echo "Tag already exists, skipping"
+            exit 0
+          fi
+          
+          git tag "${{ steps.version.outputs.next_version }}"
+          git push origin "${{ steps.version.outputs.next_version }}"
 
-        git add CHANGELOG.md
-
-        if git diff --staged --quiet; then
-          echo "No changelog changes"
-        else
-          git commit -m "docs: update CHANGELOG for $NEXT_VERSION"
-        fi
-
-    # 6. Crea tag
-    - name: Create tag
-      run: |
-        git tag $NEXT_VERSION
-
-    # 7. Push commit + tag
-    - name: Push changes
-      run: |
-        git push origin main
-        git push origin $NEXT_VERSION
-
-    # 8. GitHub Release automatica
-    - name: Create GitHub Release
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: ${{ env.NEXT_VERSION }}
-        generate_release_notes: true
+      - name: Create GitHub Release
+        if: steps.version.outputs.next_version != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.next_version }}
+          # 💡 ECCO IL SEGRETO: usa l'output di git-cliff invece di quello di GitHub
+          body_path: RELEASE_NOTES.md
+          generate_release_notes: false
