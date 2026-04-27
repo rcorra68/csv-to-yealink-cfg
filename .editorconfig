@@ -1,12 +1,16 @@
-[*]
-# Explicitly set English (US) as the primary language, Italian as secondary
-spelling_languages = en-us,it-it
-spelling_checkable_types = comments
-spelling_error_severity = suggestion
+root = true
 
 [*.cs]
-# Force English as the ONLY language for C# comments to avoid Italian suggestions
-spelling_languages = en-us
-spelling_checkable_types = comments
-spelling_exclude_identifiers = true
-spelling_include_comments = true
+
+# formatting
+indent_style = space
+indent_size = 4
+
+# .NET style
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = true
+
+# code quality
+dotnet_diagnostic.CA2000.severity = error
+dotnet_diagnostic.CA1062.severity = error
+dotnet_diagnostic.CA2208.severity = error

@@ -1,8 +1,33 @@
 <Project>
+
   <PropertyGroup>
-    <Version>1.1.0</Version>
-    <AssemblyVersion>$(Version)</AssemblyVersion>
-    <FileVersion>$(Version)</FileVersion>
-    <InformationalVersion Condition="'$(CustomVersion)' != ''">$(CustomVersion)</InformationalVersion>
+
+    <!-- ========================= -->
+    <!-- VERSIONING (git-cliff driven) -->
+    <!-- ========================= -->
+
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+    <!-- Runtime version info -->
+    <AssemblyInformationalVersion>
+      $(VersionPrefix)+$(GitCommitHash)
+    </AssemblyInformationalVersion>
+
+    <!-- Nullable + modern .NET defaults -->
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
   </PropertyGroup>
+
+  <!-- ========================= -->
+  <!-- GIT COMMIT HASH -->
+  <!-- ========================= -->
+
+  <Target Name="GetGitCommitHash" BeforeTargets="GenerateAssemblyInfo">
+    <Exec Command="git rev-parse --short HEAD"
+          ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitHash" />
+    </Exec>
+  </Target>
+
 </Project>

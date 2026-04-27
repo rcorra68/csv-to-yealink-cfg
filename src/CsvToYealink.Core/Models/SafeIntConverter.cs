@@ -10,7 +10,7 @@ public class SafeIntConverter : DefaultTypeConverter
     {
         if (string.IsNullOrWhiteSpace(text))
         {
-            return 0; // Trasforma il vuoto in zero
+            return 0; // Turns the empty field into zero
         }
 
         return int.Parse(text);
