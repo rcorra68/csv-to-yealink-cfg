@@ -1,9 +1,15 @@
 ## [unreleased]
 
+### 💼 Other
+
+- Lock .NET SDK version to 8.0.200 in global.json
+- Optimize dev workflow and relax commitlint rules
+
 ### 📚 Documentation
 
 - Update CHANGELOG
 - Modified CHANGELOG.md
+- Update CHANGELOG
 
 ### ⚙️ Miscellaneous Tasks
 
