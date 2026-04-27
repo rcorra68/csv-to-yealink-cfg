@@ -1,18 +1,54 @@
-# Changelog
+## [unreleased]
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+### ⚙️ Miscellaneous Tasks
 
-## [1.1.0](https://github.com/rcorra68/csv-to-yealink-cfg/compare/v1.0.4...v1.1.0) (2026-03-20)
+- Align development environment
+- Sync package-lock.json after dependency update
+- Removing package-lock.json file after removing npm dependencies
+## [1.1.0] - 2026-03-20
 
+### 🚀 Features
 
-### Features
+- Testing automated release
 
-* testing automated release ([9d675d1](https://github.com/rcorra68/csv-to-yealink-cfg/commit/9d675d15da54b84aac8d40739b3fc572d834cb66))
+### ⚙️ Miscellaneous Tasks
 
-### [1.0.4](https://github.com/rcorra68/csv-to-yealink-cfg/compare/v1.0.3...v1.0.4) (2026-03-20)
+- *(release)* 1.1.0
+## [1.0.4] - 2026-03-20
 
-### [1.0.3](https://github.com/rcorra68/csv-to-yealink-cfg/compare/v1.0.2...v1.0.3) (2026-03-20)
+### ⚙️ Miscellaneous Tasks
 
-### [1.0.2](https://github.com/rcorra68/csv-to-yealink-cfg/compare/v1.0.1...v1.0.2) (2026-03-20)
+- *(release)* 1.0.4
+## [1.0.3] - 2026-03-20
 
-### [1.0.1](https://github.com/rcorra68/csv-to-yealink-cfg/compare/v1.0.0...v1.0.1) (2026-03-20)
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* 1.0.3
+## [1.0.2] - 2026-03-20
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* 1.0.2
+## [1.0.1] - 2026-03-20
+
+### 🧪 Testing
+
+- Trigger CI pipeline and verify branch naming
+- Trigger CI pipeline and verify branch naming
+
+### ⚙️ Miscellaneous Tasks
+
+- Add github actions workflow for automated build and test
+- Update workflow triggers to target main branch
+- *(release)* 1.0.1
+## [1.0.0] - 2026-03-16
+
+### 🚀 Features
+
+- Add default output path fallback if unspecified (#1)
+- Implement robust error handling for CSV parsing and CLI feedback
+
+### 🐛 Bug Fixes
+
+- Serialize enum as numeric value instead of name in output (#2)
+- Handle potential null context in CSV parsing exception
