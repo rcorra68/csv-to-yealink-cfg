@@ -2,6 +2,11 @@
 
 ### 💼 Other
 
+- Implement automated release workflow with git-cliff and husky
+## [1.1.1] - 2026-04-27
+
+### 💼 Other
+
 - Lock .NET SDK version to 8.0.200 in global.json
 - Optimize dev workflow and relax commitlint rules
 
@@ -10,6 +15,7 @@
 - Update CHANGELOG
 - Modified CHANGELOG.md
 - Update CHANGELOG
+- Update CHANGELOG for v1.1.1
 
 ### ⚙️ Miscellaneous Tasks
 
