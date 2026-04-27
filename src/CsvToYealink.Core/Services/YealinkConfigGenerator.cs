@@ -10,6 +10,8 @@ public class YealinkConfigGenerator
 
     public void Generate(string outputPath, IEnumerable<Terminal> terminals)
     {
+        ArgumentNullException.ThrowIfNull(terminals);
+
         using (StreamWriter writer = new StreamWriter(outputPath))
         {
             writer.WriteLine("# Yealink Directory Configuration");
