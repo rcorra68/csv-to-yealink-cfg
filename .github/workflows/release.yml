@@ -1,65 +1,76 @@
-name: Release
+# File release.yml
+name: Release Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - develop
 
-concurrency:
-  group: release
-  cancel-in-progress: true
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
-      - name: Checkout repository
+      - name: Checkout full history
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # Utilizzo la Action per evitare i 3-5 minuti di compilazione di Cargo
-      - name: Install git-cliff
-        uses: kenji-miyake/setup-git-cliff@v2
-
-      - name: Compute next version
-        id: version
-        run: |
-          NEXT_VERSION=$(git cliff --bumped-version)
-          if [ -z "$NEXT_VERSION" ]; then
-            echo "No version detected, skipping."
-            exit 0
-          fi
-          # Usiamo GITHUB_OUTPUT invece di GITHUB_ENV per best practice tra step
-          echo "next_version=$NEXT_VERSION" >> $GITHUB_OUTPUT
-
-      - name: Generate Release Body
-        if: steps.version.outputs.next_version != ''
-        run: |
-          # Genera solo il log dell'ultima versione in un file temporaneo
-          git-cliff --latest --strip header > RELEASE_NOTES.md
-
-      - name: Push tag
-        if: steps.version.outputs.next_version != ''
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          if git rev-parse "${{ steps.version.outputs.next_version }}" >/dev/null 2>&1; then
-            echo "Tag already exists, skipping"
-            exit 0
-          fi
-          
-          git tag "${{ steps.version.outputs.next_version }}"
-          git push origin "${{ steps.version.outputs.next_version }}"
-
-      - name: Create GitHub Release
-        if: steps.version.outputs.next_version != ''
-        uses: softprops/action-gh-release@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          tag_name: ${{ steps.version.outputs.next_version }}
-          # 💡 ECCO IL SEGRETO: usa l'output di git-cliff invece di quello di GitHub
-          body_path: RELEASE_NOTES.md
-          generate_release_notes: false
+          dotnet-version: 8.0.x
+
+      - name: Configure Git Identity
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+      - name: Compute version
+        id: version
+        shell: bash
+        run: |
+          # Fallback to v0.0.0 if no tags exist
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          VERSION=${LATEST_TAG#v}
+          
+          # Basic Semantic Versioning logic (Minor increment)
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          NEW_VERSION="$MAJOR.$((MINOR+1)).0"
+          
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "Computed version: $NEW_VERSION"
+
+      - name: Build and Test
+        run: |
+          dotnet restore
+          dotnet build --configuration Release --no-restore
+          dotnet test --configuration Release --no-build
+
+      - name: Create Release Branch and Push
+        run: |
+          BRANCH_NAME="release/${{ steps.version.outputs.version }}"
+          git checkout -b $BRANCH_NAME
+          git push origin $BRANCH_NAME --force
+          
+      - name: Create PR to main
+        run: |
+          gh pr create \
+            --base main \
+            --head release/${{ steps.version.outputs.version }} \
+            --title "feat: release ${{ steps.version.outputs.version }}" \
+            --body "🚀 **Automatic Release**
+            
+            - **Version:** ${{ steps.version.outputs.version }}
+            - **Source:** ${{ github.ref_name }}
+            
+            Build and tests passed successfully. Ready for merge to main."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tag preview
+        run: |
+          echo "Preview ready for release/${{ steps.version.outputs.version }}"
