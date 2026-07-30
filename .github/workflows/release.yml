@@ -1,76 +1,15 @@
-# File release.yml
-name: Release Pipeline
+name: Prepare Release
 
 on:
   push:
     branches:
       - develop
+  workflow_dispatch:
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout full history
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-
-      - name: Configure Git Identity
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-
-      - name: Compute version
-        id: version
-        shell: bash
-        run: |
-          # Fallback to v0.0.0 if no tags exist
-          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-          VERSION=${LATEST_TAG#v}
-          
-          # Basic Semantic Versioning logic (Minor increment)
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
-          NEW_VERSION="$MAJOR.$((MINOR+1)).0"
-          
-          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "Computed version: $NEW_VERSION"
-
-      - name: Build and Test
-        run: |
-          dotnet restore
-          dotnet build --configuration Release --no-restore
-          dotnet test --configuration Release --no-build
-
-      - name: Create Release Branch and Push
-        run: |
-          BRANCH_NAME="release/${{ steps.version.outputs.version }}"
-          git checkout -b $BRANCH_NAME
-          git push origin $BRANCH_NAME --force
-          
-      - name: Create PR to main
-        run: |
-          gh pr create \
-            --base main \
-            --head release/${{ steps.version.outputs.version }} \
-            --title "feat: release ${{ steps.version.outputs.version }}" \
-            --body "🚀 **Automatic Release**
-            
-            - **Version:** ${{ steps.version.outputs.version }}
-            - **Source:** ${{ github.ref_name }}
-            
-            Build and tests passed successfully. Ready for merge to main."
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Tag preview
-        run: |
-          echo "Preview ready for release/${{ steps.version.outputs.version }}"
+  prepare:
+    uses: rcorra68/reusable-workflows/.github/workflows/prepare-release.yml@main
