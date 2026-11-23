@@ -2,7 +2,7 @@
   "profiles": {
     "csv-to-yealink-cfg": {
       "commandName": "Project",
-      "commandLineArgs": "-s d:\\Sviluppo\\VVF\\csv-to-yealink-cfg\\docs\\estensioni_yealink.csv --output module1.cfg"
+      "commandLineArgs": "-s d:\\development\\projects\\csv-to-yealink-cfg\\docs\\estensioni.example.csv --output module1.cfg"
     }
   }
 }
