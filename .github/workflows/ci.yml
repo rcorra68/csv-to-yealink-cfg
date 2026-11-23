@@ -7,3 +7,7 @@ on:
 jobs:
   validate:
     uses: rcorra68/reusable-workflows/.github/workflows/ci.yml@main
+    with:
+      # windows-latest for WPF / WinForms / .NET Framework projects
+      runs_on: ubuntu-latest
+      dotnet_version: "10.0.x"
