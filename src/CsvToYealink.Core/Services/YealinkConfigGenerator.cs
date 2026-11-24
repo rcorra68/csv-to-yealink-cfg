@@ -15,7 +15,6 @@ public class YealinkConfigGenerator
         using (StreamWriter writer = new StreamWriter(outputPath))
         {
             // Mandatory header: Yealink phones ignore .cfg files without it on the first line
-            writer.WriteLine("#!version:1.0.0.1");
             writer.WriteLine("# Yealink expansion module configuration");
             writer.WriteLine("#");
 
