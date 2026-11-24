@@ -13,6 +13,9 @@ public class Options
     [Option('p', "dial-prefix", Default = "0", HelpText = "Outside line prefix added to type 13 and type 2 numbers (Excel sources only). Use -p \"\" to disable.")]
     public string DialPrefix { get; set; } = "0";
 
+    [Option('i', "internal-max-length", Default = 4, HelpText = "Numbers up to this many digits are internal (extensions, queues) and get no dial prefix.")]
+    public int InternalMaxLength { get; set; } = 4;
+
     [Option('t', "template", Required = false, HelpText = "Path to a custom template file.")]
     public string? TemplatePath { get; set; }
 
