@@ -32,7 +32,7 @@ public partial class ExcelService
     private readonly List<string> warnings = [];
     private readonly string dialPrefix;
 
-    /// <param name="dialPrefix">Outside line prefix added to Forward (type 2) numbers, e.g. "0" for the PBX.</param>
+    /// <param name="dialPrefix">Outside line prefix added to Speed Dial (13) and Forward (2) numbers, e.g. "0" for the PBX.</param>
     public ExcelService(string dialPrefix = "0")
     {
         this.dialPrefix = dialPrefix ?? string.Empty;
@@ -97,7 +97,7 @@ public partial class ExcelService
             || typeValue == (int)ExtensionType.None)
         {
             throw new InvalidDataException(
-                $"Cell {typeCell.Address}: invalid type '{typeCell.GetFormattedString()}' for key {key} ({label}). Use 2 (Forward) or 16 (BLF).");
+                $"Cell {typeCell.Address}: invalid type '{typeCell.GetFormattedString()}' for key {key} ({label}). Use 13 (Speed Dial), 16 (BLF) or 2 (Forward).");
         }
 
         var type = (ExtensionType)typeValue;
@@ -107,12 +107,18 @@ public partial class ExcelService
             Key = key,
             Label = label,
             ExtensionType = type,
-            // BLF keys monitor an extension on the phone's first account
-            Line = type == ExtensionType.BLF ? 1 : 0,
+            // BLF and Speed Dial keys use the phone's first account
+            Line = type is ExtensionType.BLF or ExtensionType.SpeedDial ? 1 : 0,
             // External numbers go through the PBX: prepend the outside line prefix
-            ExtensionValue = type == ExtensionType.Forward ? this.dialPrefix + value : value,
+            ExtensionValue = this.NeedsPrefix(type, value) ? this.dialPrefix + value : value,
         };
     }
+
+    // PBX feature codes ("mete", e.g. *5234) are dialed as they are, without the outside line prefix
+    private bool NeedsPrefix(ExtensionType type, string value) =>
+        type is ExtensionType.SpeedDial or ExtensionType.Forward
+        && !value.StartsWith('*')
+        && !value.StartsWith('#');
 
     private static string Text(IXLRow row, int column) =>
         row.Cell(column).GetFormattedString().Trim();

@@ -10,7 +10,7 @@ public class Options
     [Option('o', "output", Required = false, Default = "directory.cfg", HelpText = "Output .cfg file path.")]
     public string OutputPath { get; set; } = "directory.cfg";
 
-    [Option('p', "dial-prefix", Default = "0", HelpText = "Outside line prefix added to type 2 numbers (Excel sources only). Use -p \"\" to disable.")]
+    [Option('p', "dial-prefix", Default = "0", HelpText = "Outside line prefix added to type 13 and type 2 numbers (Excel sources only). Use -p \"\" to disable.")]
     public string DialPrefix { get; set; } = "0";
 
     [Option('t', "template", Required = false, HelpText = "Path to a custom template file.")]

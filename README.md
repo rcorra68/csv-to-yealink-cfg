@@ -49,7 +49,7 @@ dotnet run -- --source contacts.csv --output my_phone_config.cfg
 | --- | --- | --- | --- |
 | `-s` | `--source` | **Yes** | Path to the source CSV file. |
 | `-o` | `--output` | No | Path for the generated .cfg (Default: `directory.cfg`). |
-| `-p` | `--dial-prefix` | No | Outside line prefix for type 2 numbers, Excel only (Default: `0`). |
+| `-p` | `--dial-prefix` | No | Outside line prefix for type 13 and 2 numbers, Excel only (Default: `0`). |
 | `-t` | `--template` | No | (Coming soon) Path to a custom .tpl file. |
 | `-v` | `--verbose` | No | Set output to verbose messages. |
 | `-e` | `--env` | No | Target environment (Development, Staging, Production). |
@@ -80,8 +80,8 @@ A `.xlsx` source is read directly, no CSV needed. The first sheet mirrors the mo
 * Rows whose key cell is not a number (e.g. `PAGINA 1`) are ignored.
 * Keys with an empty number are **reset** (`type = 0`), so free slots show up empty on the phone. A label without a number is reset too, with a warning.
 * Spaces, dashes, dots and slashes are stripped from numbers (`0765 123456` → `0765123456`).
-* BLF keys use `line = 1`.
-* Type 2 numbers get the outside line prefix `0` (calls go through the PBX). Change it with `-p 9`, disable it with `-p ""`.
+* BLF and Speed Dial keys use `line = 1`.
+* Type 13 and type 2 numbers get the outside line prefix `0` (calls go through the PBX). PBX shortcuts starting with `*` or `#` (e.g. `*5 234` → `*5234`) are left without prefix. Change it with `-p 9`, disable it with `-p ""`.
 * Format the number columns as **Text** in Excel, or leading zeros are lost.
 
 ```bash
@@ -92,7 +92,8 @@ CsvToYealink -s Schema_Estensione.xlsx -o module1.cfg
 
 | Value | Yealink Type | Description |
 | --- | --- | --- |
-| `2` | **Forward** | Speed dial or call forwarding. |
+| `13` | **Speed Dial** | One-touch dialing of a number (use this for external numbers). |
+| `2` | **Forward** | Call forwarding to the number (not a speed dial). |
 | `16` | **BLF** | Busy Lamp Field (Monitoring). |
 | `0` | **None** | Reset the key (free slot). |
 
