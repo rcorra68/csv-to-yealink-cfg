@@ -3,6 +3,15 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/), versioning
 follows [Semantic Versioning](https://semver.org/).
+## [1.5.0] - 2026-11-24
+
+### Documentation
+
+- *(changelog)* Update for v1.4.0
+
+### Features
+
+- Support speed dial keys (type 13)
 ## [1.4.0] - 2026-11-24
 
 ### Documentation
