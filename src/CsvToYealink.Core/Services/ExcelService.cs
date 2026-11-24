@@ -31,11 +31,14 @@ public partial class ExcelService
 
     private readonly List<string> warnings = [];
     private readonly string dialPrefix;
+    private readonly int internalMaxLength;
 
     /// <param name="dialPrefix">Outside line prefix added to Speed Dial (13) and Forward (2) numbers, e.g. "0" for the PBX.</param>
-    public ExcelService(string dialPrefix = "0")
+    /// <param name="internalMaxLength">Numbers up to this many digits are internal (extensions, queues) and get no prefix.</param>
+    public ExcelService(string dialPrefix = "0", int internalMaxLength = 4)
     {
         this.dialPrefix = dialPrefix ?? string.Empty;
+        this.internalMaxLength = internalMaxLength;
     }
 
     /// <summary>Non-blocking issues found during the last read (e.g. label without number).</summary>
@@ -114,11 +117,13 @@ public partial class ExcelService
         };
     }
 
-    // PBX feature codes ("mete", e.g. *5234) are dialed as they are, without the outside line prefix
+    // Only external numbers need the outside line prefix: PBX feature codes ("mete", e.g. *5234)
+    // and short internal numbers (extensions, queues such as 400) are dialed as they are
     private bool NeedsPrefix(ExtensionType type, string value) =>
         type is ExtensionType.SpeedDial or ExtensionType.Forward
         && !value.StartsWith('*')
-        && !value.StartsWith('#');
+        && !value.StartsWith('#')
+        && value.Length > this.internalMaxLength;
 
     private static string Text(IXLRow row, int column) =>
         row.Cell(column).GetFormattedString().Trim();
