@@ -46,7 +46,8 @@ public class ExcelServiceTests
             Assert.Equal(2, results[1].Key);
             Assert.Equal("Centro TLC", results[1].Label);
             Assert.Equal(ExtensionType.Forward, results[1].ExtensionType);
-            Assert.Equal("0765123456", results[1].ExtensionValue);
+            Assert.Equal("00765123456", results[1].ExtensionValue); // default "0" prefix
+            Assert.Equal("402", results[0].ExtensionValue);          // BLF: no prefix
 
             Assert.Equal(3, results[2].Key);
             Assert.Equal(ExtensionType.None, results[2].ExtensionType);
@@ -105,6 +106,31 @@ public class ExcelServiceTests
             var ex = Assert.Throws<InvalidDataException>(
                 () => new ExcelService().ReadTerminals(filePath).ToList());
             Assert.Contains("C1", ex.Message);
+        }
+        finally
+        {
+            File.Delete(filePath);
+        }
+    }
+
+    [Fact]
+    public void ReadTerminals_ShouldNotPrefix_WhenDialPrefixIsEmpty()
+    {
+        var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        using (var wb = new XLWorkbook())
+        {
+            var ws = wb.AddWorksheet("Foglio1");
+            ws.Cell("A1").Value = 1;
+            ws.Cell("B1").Value = "Centro TLC";
+            ws.Cell("C1").Value = "2";
+            ws.Cell("D1").Value = "0765123456";
+            wb.SaveAs(filePath);
+        }
+
+        try
+        {
+            var result = Assert.Single(new ExcelService(dialPrefix: "").ReadTerminals(filePath));
+            Assert.Equal("0765123456", result.ExtensionValue);
         }
         finally
         {
