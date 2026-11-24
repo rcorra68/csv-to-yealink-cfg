@@ -3,6 +3,24 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/), versioning
 follows [Semantic Versioning](https://semver.org/).
+## [1.3.0] - 2026-11-24
+
+### Bug Fixes
+
+- Add mandatory version header to generated cfg
+
+### Documentation
+
+- *(changelog)* Update for v1.2.0
+
+### Features
+
+- Read keys directly from Excel layout
+- Reset expansion module keys with no number
+
+### Other
+
+- Add ClosedXML dependency
 ## [1.2.0] - 2026-11-23
 
 ### Documentation
