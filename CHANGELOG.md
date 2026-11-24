@@ -3,6 +3,15 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/), versioning
 follows [Semantic Versioning](https://semver.org/).
+## [1.5.1] - 2026-11-24
+
+### Bug Fixes
+
+- Remove 'version' tag on top of cfg file
+
+### Documentation
+
+- *(changelog)* Update for v1.5.0
 ## [1.5.0] - 2026-11-24
 
 ### Documentation
