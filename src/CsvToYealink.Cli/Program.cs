@@ -25,11 +25,29 @@ public class Program
     {
         try
         {
-            var parser = new CsvService();
             var generator = new YealinkConfigGenerator();
 
-            // 1. Read
-            var terminals = parser.ReadRecords<Terminal>(opts.SourcePath);
+            // 1. Read (Excel layout or plain CSV, chosen by file extension)
+            bool isExcel = Path.GetExtension(opts.SourcePath)
+                .Equals(".xlsx", StringComparison.OrdinalIgnoreCase);
+
+            IEnumerable<Terminal> terminals;
+            if (isExcel)
+            {
+                var excel = new ExcelService();
+                terminals = excel.ReadTerminals(opts.SourcePath);
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                foreach (string warning in excel.Warnings)
+                {
+                    Console.WriteLine($"Warning: {warning}");
+                }
+                Console.ResetColor();
+            }
+            else
+            {
+                terminals = new CsvService().ReadRecords<Terminal>(opts.SourcePath);
+            }
 
             // 2. Generate
             generator.Generate(opts.OutputPath, terminals);
