@@ -3,6 +3,15 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/), versioning
 follows [Semantic Versioning](https://semver.org/).
+## [1.4.0] - 2026-11-24
+
+### Documentation
+
+- *(changelog)* Update for v1.3.0
+
+### Features
+
+- Add outside line prefix to forward numbers
 ## [1.3.0] - 2026-11-24
 
 ### Bug Fixes
