@@ -34,7 +34,7 @@ public class Program
             IEnumerable<Terminal> terminals;
             if (isExcel)
             {
-                var excel = new ExcelService();
+                var excel = new ExcelService(opts.DialPrefix);
                 terminals = excel.ReadTerminals(opts.SourcePath);
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
