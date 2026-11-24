@@ -68,6 +68,24 @@ key,label,line,type,value
 
 ```
 
+### Input (Excel)
+
+A `.xlsx` source is read directly, no CSV needed. The first sheet mirrors the module: each row holds two keys side by side.
+
+| A | B | C | D | E | F | G | H | I |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| key | label | type | value | | label | type | value | key |
+
+* Rows whose key cell is not a number (e.g. `PAGINA 1`) are ignored.
+* Keys with an empty label are skipped.
+* Spaces, dashes, dots and slashes are stripped from numbers (`0765 123456` → `0765123456`).
+* BLF keys use `line = 1`.
+* Format the number columns as **Text** in Excel, or leading zeros are lost.
+
+```bash
+CsvToYealink -s Schema_Estensione.xlsx -o module1.cfg
+```
+
 ### Supported Types (`type` column)
 
 | Value | Yealink Type | Description |

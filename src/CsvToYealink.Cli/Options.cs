@@ -4,7 +4,7 @@ using CommandLine;
 
 public class Options
 {
-    [Option('s', "source", Required = true, HelpText = "Source CSV file path.")]
+    [Option('s', "source", Required = true, HelpText = "Source file path: .csv or .xlsx (Schema_Estensione layout).")]
     public string SourcePath { get; set; } = string.Empty;
 
     [Option('o', "output", Required = false, Default = "directory.cfg", HelpText = "Output .cfg file path.")]
