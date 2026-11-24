@@ -163,4 +163,35 @@ public class ExcelServiceTests
             File.Delete(filePath);
         }
     }
+
+    [Theory]
+    [InlineData("400", 4, "400")]          // queue: internal, no prefix
+    [InlineData("4001", 4, "4001")]        // 4-digit extension: still internal
+    [InlineData("40012", 4, "040012")]     // longer: external, prefixed
+    [InlineData("0765 123456", 4, "00765123456")]
+    [InlineData("4001", 3, "04001")]       // custom limit
+    public void ReadTerminals_ShouldPrefixOnlyExternalNumbers(string number, int internalMaxLength, string expected)
+    {
+        var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        using (var wb = new XLWorkbook())
+        {
+            var ws = wb.AddWorksheet("Foglio1");
+            ws.Cell("A1").Value = 1;
+            ws.Cell("B1").Value = "Coda";
+            ws.Cell("C1").Value = "13";
+            ws.Cell("D1").Value = number;
+            wb.SaveAs(filePath);
+        }
+
+        try
+        {
+            var result = Assert.Single(
+                new ExcelService(dialPrefix: "0", internalMaxLength: internalMaxLength).ReadTerminals(filePath));
+            Assert.Equal(expected, result.ExtensionValue);
+        }
+        finally
+        {
+            File.Delete(filePath);
+        }
+    }
 }

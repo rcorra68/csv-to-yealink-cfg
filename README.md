@@ -50,6 +50,7 @@ dotnet run -- --source contacts.csv --output my_phone_config.cfg
 | `-s` | `--source` | **Yes** | Path to the source CSV file. |
 | `-o` | `--output` | No | Path for the generated .cfg (Default: `directory.cfg`). |
 | `-p` | `--dial-prefix` | No | Outside line prefix for type 13 and 2 numbers, Excel only (Default: `0`). |
+| `-i` | `--internal-max-length` | No | Numbers up to this many digits are internal and get no prefix (Default: `4`). |
 | `-t` | `--template` | No | (Coming soon) Path to a custom .tpl file. |
 | `-v` | `--verbose` | No | Set output to verbose messages. |
 | `-e` | `--env` | No | Target environment (Development, Staging, Production). |
@@ -81,7 +82,7 @@ A `.xlsx` source is read directly, no CSV needed. The first sheet mirrors the mo
 * Keys with an empty number are **reset** (`type = 0`), so free slots show up empty on the phone. A label without a number is reset too, with a warning.
 * Spaces, dashes, dots and slashes are stripped from numbers (`0765 123456` → `0765123456`).
 * BLF and Speed Dial keys use `line = 1`.
-* Type 13 and type 2 numbers get the outside line prefix `0` (calls go through the PBX). PBX shortcuts starting with `*` or `#` (e.g. `*5 234` → `*5234`) are left without prefix. Change it with `-p 9`, disable it with `-p ""`.
+* Type 13 and type 2 numbers get the outside line prefix `0` (calls go through the PBX). PBX shortcuts starting with `*` or `#` (e.g. `*5 234` → `*5234`) and internal numbers up to 4 digits (e.g. queue `400`) are left without prefix. Change it with `-p 9`, disable it with `-p ""`.
 * Format the number columns as **Text** in Excel, or leading zeros are lost.
 
 ```bash
