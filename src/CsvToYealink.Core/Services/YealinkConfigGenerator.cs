@@ -33,6 +33,10 @@ public class YealinkConfigGenerator
                         writer.WriteLine($"expansion_module.{moduleId}.key.{terminal.Key}.line = {terminal.Line}");
                         writer.WriteLine($"expansion_module.{moduleId}.key.{terminal.Key}.value = {terminal.ExtensionValue}");
                         break;
+                    case ExtensionType.SpeedDial:
+                        writer.WriteLine($"expansion_module.{moduleId}.key.{terminal.Key}.line = {terminal.Line}");
+                        writer.WriteLine($"expansion_module.{moduleId}.key.{terminal.Key}.value = {terminal.ExtensionValue}");
+                        break;
                     case ExtensionType.Forward:
                         writer.WriteLine($"expansion_module.{moduleId}.key.{terminal.Key}.value = {terminal.ExtensionValue}");
                         break;
