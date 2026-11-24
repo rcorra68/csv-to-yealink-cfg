@@ -31,9 +31,23 @@ public class Program
             bool isExcel = Path.GetExtension(opts.SourcePath)
                 .Equals(".xlsx", StringComparison.OrdinalIgnoreCase);
 
-            var terminals = isExcel
-                ? new ExcelService().ReadTerminals(opts.SourcePath)
-                : new CsvService().ReadRecords<Terminal>(opts.SourcePath);
+            IEnumerable<Terminal> terminals;
+            if (isExcel)
+            {
+                var excel = new ExcelService();
+                terminals = excel.ReadTerminals(opts.SourcePath);
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                foreach (string warning in excel.Warnings)
+                {
+                    Console.WriteLine($"Warning: {warning}");
+                }
+                Console.ResetColor();
+            }
+            else
+            {
+                terminals = new CsvService().ReadRecords<Terminal>(opts.SourcePath);
+            }
 
             // 2. Generate
             generator.Generate(opts.OutputPath, terminals);

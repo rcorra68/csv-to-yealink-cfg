@@ -77,7 +77,7 @@ A `.xlsx` source is read directly, no CSV needed. The first sheet mirrors the mo
 | key | label | type | value | | label | type | value | key |
 
 * Rows whose key cell is not a number (e.g. `PAGINA 1`) are ignored.
-* Keys with an empty label are skipped.
+* Keys with an empty number are **reset** (`type = 0`), so free slots show up empty on the phone. A label without a number is reset too, with a warning.
 * Spaces, dashes, dots and slashes are stripped from numbers (`0765 123456` → `0765123456`).
 * BLF keys use `line = 1`.
 * Format the number columns as **Text** in Excel, or leading zeros are lost.
@@ -92,6 +92,7 @@ CsvToYealink -s Schema_Estensione.xlsx -o module1.cfg
 | --- | --- | --- |
 | `2` | **Forward** | Speed dial or call forwarding. |
 | `16` | **BLF** | Busy Lamp Field (Monitoring). |
+| `0` | **None** | Reset the key (free slot). |
 
 ### Output (.cfg)
 

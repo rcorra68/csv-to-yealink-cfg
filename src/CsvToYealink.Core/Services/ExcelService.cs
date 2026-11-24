@@ -11,8 +11,9 @@ using CsvToYealink.Core.Entities;
 /// Each row holds two keys side by side:
 ///   A = key | B = label | C = type | D = value      (left key)
 ///   F = label | G = type | H = value | I = key      (right key)
-/// Rows whose key cell is not a number (e.g. "PAGINA 1" separators) are skipped,
-/// as are keys with an empty label (unused slots).
+/// Rows whose key cell is not a number (e.g. "PAGINA 1" separators) are skipped.
+/// Keys with an empty number are returned as reset keys (type None), so the
+/// phone shows them as free slots.
 /// </summary>
 public partial class ExcelService
 {
@@ -28,6 +29,11 @@ public partial class ExcelService
     [GeneratedRegex(@"[\s\-\./()]")]
     private static partial Regex NumberSeparators();
 
+    private readonly List<string> warnings = [];
+
+    /// <summary>Non-blocking issues found during the last read (e.g. label without number).</summary>
+    public IReadOnlyList<string> Warnings => this.warnings;
+
     public IEnumerable<Terminal> ReadTerminals(string filePath)
     {
         if (!File.Exists(filePath))
@@ -38,12 +44,13 @@ public partial class ExcelService
         using var workbook = new XLWorkbook(filePath);
         var sheet = workbook.Worksheet(1);
         var terminals = new List<Terminal>();
+        this.warnings.Clear();
 
         foreach (var row in sheet.RowsUsed())
         {
             foreach (var side in Sides)
             {
-                var terminal = ReadKey(row, side);
+                var terminal = this.ReadKey(row, side);
                 if (terminal is not null)
                 {
                     terminals.Add(terminal);
@@ -54,7 +61,7 @@ public partial class ExcelService
         return terminals.OrderBy(t => t.Key).ToList();
     }
 
-    private static Terminal? ReadKey(IXLRow row, Side side)
+    private Terminal? ReadKey(IXLRow row, Side side)
     {
         if (!int.TryParse(Text(row, side.KeyCol), out int key))
         {
@@ -62,9 +69,19 @@ public partial class ExcelService
         }
 
         string label = Text(row, side.LabelCol);
-        if (label.Length == 0)
+        var valueCell = row.Cell(side.ValueCol);
+        string value = NumberSeparators().Replace(Text(row, side.ValueCol), string.Empty);
+
+        if (value.Length == 0)
         {
-            return null; // unused key
+            if (label.Length > 0)
+            {
+                this.warnings.Add(
+                    $"Cell {valueCell.Address}: key {key} ({label}) has no number and will be reset.");
+            }
+
+            // Free slot: reset the key on the phone
+            return new Terminal { Key = key, ExtensionType = ExtensionType.None };
         }
 
         var typeCell = row.Cell(side.TypeCol);
@@ -74,14 +91,6 @@ public partial class ExcelService
         {
             throw new InvalidDataException(
                 $"Cell {typeCell.Address}: invalid type '{typeCell.GetFormattedString()}' for key {key} ({label}). Use 2 (Forward) or 16 (BLF).");
-        }
-
-        var valueCell = row.Cell(side.ValueCol);
-        string value = NumberSeparators().Replace(Text(row, side.ValueCol), string.Empty);
-        if (value.Length == 0)
-        {
-            throw new InvalidDataException(
-                $"Cell {valueCell.Address}: missing number for key {key} ({label}).");
         }
 
         var type = (ExtensionType)typeValue;

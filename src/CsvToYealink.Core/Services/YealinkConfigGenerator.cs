@@ -34,6 +34,11 @@ public class YealinkConfigGenerator
                     case ExtensionType.Forward:
                         writer.WriteLine($"expansion_module.{moduleId}.key.{terminal.Key}.value = {terminal.ExtensionValue}");
                         break;
+                    case ExtensionType.None:
+                        // Reset: clear leftovers from a previous configuration
+                        writer.WriteLine($"expansion_module.{moduleId}.key.{terminal.Key}.value = ");
+                        writer.WriteLine($"expansion_module.{moduleId}.key.{terminal.Key}.extension = ");
+                        break;
                 }
             }
 

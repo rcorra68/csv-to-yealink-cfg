@@ -10,7 +10,7 @@ using Xunit;
 public class ExcelServiceTests
 {
     [Fact]
-    public void ReadTerminals_ShouldReadBothSides_AndSkipSeparatorsAndEmptyKeys()
+    public void ReadTerminals_ShouldReadBothSides_AndResetEmptyKeys()
     {
         // Arrange: same layout as Schema_Estensione.xlsx
         var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
@@ -36,8 +36,8 @@ public class ExcelServiceTests
             // Act
             var results = new ExcelService().ReadTerminals(filePath).ToList();
 
-            // Assert
-            Assert.Equal(2, results.Count);
+            // Assert: 2 configured keys + 2 reset keys, separator row ignored
+            Assert.Equal(4, results.Count);
 
             Assert.Equal(1, results[0].Key);
             Assert.Equal(ExtensionType.BLF, results[0].ExtensionType);
@@ -47,6 +47,11 @@ public class ExcelServiceTests
             Assert.Equal("Centro TLC", results[1].Label);
             Assert.Equal(ExtensionType.Forward, results[1].ExtensionType);
             Assert.Equal("0765123456", results[1].ExtensionValue);
+
+            Assert.Equal(3, results[2].Key);
+            Assert.Equal(ExtensionType.None, results[2].ExtensionType);
+            Assert.Equal(4, results[3].Key);
+            Assert.Equal(ExtensionType.None, results[3].ExtensionType);
         }
         finally
         {
@@ -55,7 +60,7 @@ public class ExcelServiceTests
     }
 
     [Fact]
-    public void ReadTerminals_ShouldThrow_WhenNumberIsMissing()
+    public void ReadTerminals_ShouldResetAndWarn_WhenLabelHasNoNumber()
     {
         var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
         using (var wb = new XLWorkbook())
@@ -69,9 +74,37 @@ public class ExcelServiceTests
 
         try
         {
+            var service = new ExcelService();
+            var result = Assert.Single(service.ReadTerminals(filePath));
+
+            Assert.Equal(ExtensionType.None, result.ExtensionType);
+            Assert.Contains("D1", Assert.Single(service.Warnings));
+        }
+        finally
+        {
+            File.Delete(filePath);
+        }
+    }
+
+    [Fact]
+    public void ReadTerminals_ShouldThrow_WhenTypeIsInvalid()
+    {
+        var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.xlsx");
+        using (var wb = new XLWorkbook())
+        {
+            var ws = wb.AddWorksheet("Foglio1");
+            ws.Cell("A1").Value = 1;
+            ws.Cell("B1").Value = "Segreteria";
+            ws.Cell("C1").Value = "99";
+            ws.Cell("D1").Value = "402";
+            wb.SaveAs(filePath);
+        }
+
+        try
+        {
             var ex = Assert.Throws<InvalidDataException>(
                 () => new ExcelService().ReadTerminals(filePath).ToList());
-            Assert.Contains("D1", ex.Message);
+            Assert.Contains("C1", ex.Message);
         }
         finally
         {
