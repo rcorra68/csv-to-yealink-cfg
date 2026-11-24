@@ -30,6 +30,13 @@ public partial class ExcelService
     private static partial Regex NumberSeparators();
 
     private readonly List<string> warnings = [];
+    private readonly string dialPrefix;
+
+    /// <param name="dialPrefix">Outside line prefix added to Forward (type 2) numbers, e.g. "0" for the PBX.</param>
+    public ExcelService(string dialPrefix = "0")
+    {
+        this.dialPrefix = dialPrefix ?? string.Empty;
+    }
 
     /// <summary>Non-blocking issues found during the last read (e.g. label without number).</summary>
     public IReadOnlyList<string> Warnings => this.warnings;
@@ -102,7 +109,8 @@ public partial class ExcelService
             ExtensionType = type,
             // BLF keys monitor an extension on the phone's first account
             Line = type == ExtensionType.BLF ? 1 : 0,
-            ExtensionValue = value,
+            // External numbers go through the PBX: prepend the outside line prefix
+            ExtensionValue = type == ExtensionType.Forward ? this.dialPrefix + value : value,
         };
     }
 
