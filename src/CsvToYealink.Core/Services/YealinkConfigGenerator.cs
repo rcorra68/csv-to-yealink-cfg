@@ -14,7 +14,9 @@ public class YealinkConfigGenerator
 
         using (StreamWriter writer = new StreamWriter(outputPath))
         {
-            writer.WriteLine("# Yealink Directory Configuration");
+            // Mandatory header: Yealink phones ignore .cfg files without it on the first line
+            writer.WriteLine("#!version:1.0.0.1");
+            writer.WriteLine("# Yealink expansion module configuration");
             writer.WriteLine("#");
 
             foreach (Terminal terminal in terminals)
@@ -33,6 +35,11 @@ public class YealinkConfigGenerator
                         break;
                     case ExtensionType.Forward:
                         writer.WriteLine($"expansion_module.{moduleId}.key.{terminal.Key}.value = {terminal.ExtensionValue}");
+                        break;
+                    case ExtensionType.None:
+                        // Reset: clear leftovers from a previous configuration
+                        writer.WriteLine($"expansion_module.{moduleId}.key.{terminal.Key}.value = ");
+                        writer.WriteLine($"expansion_module.{moduleId}.key.{terminal.Key}.extension = ");
                         break;
                 }
             }
